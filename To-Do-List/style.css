@@ -45,3 +45,15 @@ button{
 button:hover{
     background: #1a672b;
 }
+
+ul{
+    list-style: none;
+    padding: 0;
+}
+
+li{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
