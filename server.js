@@ -1,24 +1,24 @@
-import sqlite3 from "sqlite3";                                                            
-import { open } from "sqlite";                                                            
-import express from "express";               
+import sqlite3 from "sqlite3";
+import { open } from "sqlite";
+import express from "express";
 
 const app = express();
 const PORT = 3000;
 
-//middleware
+// Middleware
 app.use(express.json());
-app.use(express.static('public/')); // serve para acessar arquivos estáticos(HTML, CSS e JS)
+app.use(express.static('public/')); // Serve arquivos estáticos (HTML, CSS, JS)
 
-// inicializando o banco de dados SQLite
+// SQLite database initialization
 let db;
 
 async function initDB() {
     db = await open({
-        filename:  './banco.db',
+        filename: './banco.db',
         driver: sqlite3.Database,
     });
-
-    await db.run(`CREATE TABLE IF NOT EXISTS tasks(
+   
+    await db.run(`CREATE TABLE IF NOT EXISTS tasks (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         description TEXT NOT NULL,
         completed INTEGER DEFAULT 0
@@ -26,12 +26,12 @@ async function initDB() {
 }
 
 // API Endpoints
-app.get('/tasks', async(req, res) => {
-    const tasks = await db.all()
-    res.json(tasks)
+app.get('/tasks', async (req, res) => {
+    const tasks = await db.all(`SELECT * FROM tasks`);
+    res.json(tasks);
 });
 
-app.post('/tasks', async(req, res) => {
+app.post('/tasks', async (req, res) => {
     const { description } = req.body;
     const stmt = await db.prepare(`INSERT INTO tasks (description) VALUES (?)`);
     await stmt.run(description);
@@ -39,21 +39,21 @@ app.post('/tasks', async(req, res) => {
     res.status(201).json({ message: 'Task added' });
 });
 
-app.delete('/tasks', async(req, res) => {
+app.delete('/tasks/:id', async (req, res) => {
     const { id } = req.params;
-    await db.get(`DELETE FROM tasks WHERE id = ?`, id);
+    await db.run(`DELETE FROM tasks WHERE id = ?`, id);
     res.status(204).send();
-})
+});
 
-app.patch('/task/:id/toggle', async(req, res) => {
+app.patch('/tasks/:id/toggle', async (req, res) => {
     const { id } = req.params;
     const task = await db.get(`SELECT * FROM tasks WHERE id = ?`, id);
-    const completed = task.completed ? 0 : 1;
+    const completed = task.completed ? 0 : 1; // Toggle completion
     await db.run(`UPDATE tasks SET completed = ? WHERE id = ?`, completed, id);
     res.status(204).send();
 });
 
-app.listen(PORT, async() => {
+app.listen(PORT, async () => {
     await initDB();
-    console.log(`Server running at http://localhost:${PORT}`)
-})
+    console.log(`Server running at http://localhost:${PORT}`);
+});

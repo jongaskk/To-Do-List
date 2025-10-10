@@ -1,26 +1,18 @@
 {
-  "name": "to-do-list",
+  "name": "to-do-list-sala-04",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jongaskk/To-Do-List.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/jongaskk/To-Do-List/issues"
-  },
-  "homepage": "https://github.com/jongaskk/To-Do-List#readme",
+  "description": "",
   "dependencies": {
     "express": "^5.1.0",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
-  }
+  },
+  "type":"module"
 }
